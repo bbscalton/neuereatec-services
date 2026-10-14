@@ -73,3 +73,5 @@ footer{border-top:1px solid var(--line);padding:56px 0 34px;margin-top:40px;colo
 .logo{letter-spacing:.04em;font-weight:700;font-size:1rem}
 .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}.chip{border:1px solid var(--line);background:rgba(22,32,43,.7);border-radius:999px;padding:6px 12px;font-size:13px;color:#d7d0c4}
 section{border-bottom:1px solid var(--line)}
+
+.suform label{display:block;margin:12px 0 4px;font-size:.92rem;color:var(--mut)}.suform input{width:100%;padding:11px 12px;border-radius:10px;border:1px solid rgba(255,255,255,.15);background:rgba(0,0,0,.25);color:var(--txt);font:inherit}.suform button{margin-top:18px}.suerr{color:#ff7b72;min-height:1.2em}.sukey{white-space:pre-wrap;word-break:break-all;padding:12px;border:1px dashed #e3b341;border-radius:10px;background:rgba(0,0,0,.3)}

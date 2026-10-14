@@ -5,16 +5,28 @@
 <link rel="icon" href="img/logo.svg" type="image/svg+xml"><link rel="stylesheet" href="style.css"></head>
 <body>
 <header><div class="c nav"><a class="logo" href="#top" style="display:flex;gap:10px;align-items:center;color:var(--txt)"><span class="mark">N</span> NEUEREATEC</a>
-<nav class="links"><a href="#otp">OTP Verify</a><a href="#whatsapp">WhatsApp</a><a href="#gsm">SIM bridge</a><a href="#developers">Developers</a><a href="#pricing">Pricing</a><a class="btn p" href="#contact">Contact</a></nav>
+<nav class="links"><a href="#signup">Start here</a><a href="#otp">OTP Verify</a><a href="#whatsapp">WhatsApp</a><a href="#gsm">SIM bridge</a><a href="#developers">Developers</a><a href="#pricing">Pricing</a><a class="btn p" href="#signup">Get started</a></nav>
 <button class="burger" aria-label="Menu">☰</button></div></header>
 <main id="top">
 <div class="c hero">
 <div class="reveal"><p class="eye">Neuereatec Enterprise · Messaging &amp; voice</p>
 <h1>Every number. Every message. <span class="gt">One line.</span></h1>
 <p class="lead">Send login codes to any phone, answer WhatsApp calls and chats on your office extensions, and let a regular mobile number ring straight through to your team. One platform, run by Neuereatec.</p>
-<div class="cta"><a class="btn p" href="#otp">See OTP Verify</a><a class="btn g" href="#developers">Developer quick start</a></div>
+<div class="cta"><a class="btn p" href="#signup">Get started / Sign up</a><a class="btn g" href="#otp">See OTP Verify</a><a class="btn g" href="#developers">Developer quick start</a></div>
 <div class="chips"><span class="chip">SMS verification codes</span><span class="chip">WhatsApp on your extensions</span><span class="chip">Mobile number → any extension</span></div></div>
 <div class="reveal"><img class="hero-art" src="img/hero-platform.svg" alt="OTP Verify, WhatsApp and the SIM bridge connected into one Neuereatec platform"></div></div>
+
+<section id="signup"><div class="c"><div class="glass band reveal" style="text-align:left;max-width:680px;margin:0 auto">
+<p class="eye">Start here</p><h2>Get your API key in one minute.</h2>
+<p class="lead" style="margin:0 0 18px">Free trial: <b>10 texts</b>. New keys start in <b>test mode</b>: nothing is delivered, and <code class="i">otp/send</code> returns a <code class="i">test_code</code> so you can build right away. We switch you to live on request; then it is USD 0.05 per text.</p>
+<form id="su" class="suform"><label>Your name<input name="name" required maxlength="80" autocomplete="name"></label>
+<label>Email<input name="email" type="email" required maxlength="120" autocomplete="email"></label>
+<label>Company / app name<input name="company" required maxlength="30" placeholder="MyApp"></label>
+<button class="btn p" id="sub" type="submit">Get started — create my key</button><p class="suerr" id="suerr" role="alert"></p></form>
+<div id="suout" hidden><p class="note"><b>Your API key — shown once.</b> Copy it now and keep it on your server, never in an app or web page.</p>
+<pre class="sukey" id="sukey"></pre><button class="btn g" id="sucopy" type="button">Copy key</button>
+<p class="mut" id="suinfo" style="margin-top:12px"></p><p class="mut">Next: send your first code with <code class="i">POST /api/v1/otp/send</code> (see <a href="#developers">Quick start</a> and the <a href="https://api.neuereatec.org/api/v1/docs">full docs</a>).</p></div>
+</div></div></section>
 
 <section id="otp"><div class="c">
 <div class="reveal" style="max-width:760px"><p class="eye">The headline · OTP / SMS Verify API</p><h2>Verify a phone number in two API calls.</h2>
@@ -74,7 +86,7 @@
 <span class="o">→ {"id":"SM0a1b…","status":"queued","parts":1}</span></pre></div></div></div></section>
 
 <section id="developers"><div class="c"><div class="reveal"><p class="eye">Developers</p><h2>Quick start</h2>
-<p class="lead">Base URL <code class="i">https://api.neuereatec.org/api/v1</code>. Full reference: <a href="https://api.neuereatec.org/api/v1/docs">api.neuereatec.org/api/v1/docs</a>. JSON in, JSON out. Authenticate with <code class="i">Authorization: Bearer YOUR_API_KEY</code> and keep the key on your server.</p></div>
+<p class="lead"><a class="btn p" href="#signup" style="margin-bottom:14px">Get started / Sign up</a><br>Base URL <code class="i">https://api.neuereatec.org/api/v1</code>. Full reference: <a href="https://api.neuereatec.org/api/v1/docs">api.neuereatec.org/api/v1/docs</a>. JSON in, JSON out. Authenticate with <code class="i">Authorization: Bearer YOUR_API_KEY</code> and keep the key on your server.</p></div>
 <div class="glass term reveal" data-tabs style="margin-top:28px">
 <div class="tabs"><button class="on">Sign up</button><button>Send code</button><button>Verify code</button><button>SMS</button><button>Usage</button><button>Errors</button></div>
 <div class="pane on"><pre><span class="k">curl</span> -X POST https://api.neuereatec.org/api/v1/signup -H <span class="s">"Content-Type: application/json"</span> \
@@ -123,7 +135,7 @@
 
 <section id="pricing"><div class="c"><div class="reveal"><p class="eye">Pricing</p><h2>Priced to your volume.</h2></div>
 <div class="grid3" style="margin-top:30px">
-<div class="glass price reveal"><h3>OTP Verify &amp; SMS</h3><div class="amt">$0.05</div><p class="mut">USD per text (SMS part), pay as you go</p><ul class="feat"><li>Free trial: 10 texts</li><li>New keys start in test mode</li><li>API key &amp; usage reporting</li></ul><a class="btn g" href="#developers">Start free</a></div>
+<div class="glass price reveal"><h3>OTP Verify &amp; SMS</h3><div class="amt">$0.05</div><p class="mut">USD per text (SMS part), pay as you go</p><ul class="feat"><li>Free trial: 10 texts</li><li>New keys start in test mode</li><li>API key &amp; usage reporting</li></ul><a class="btn p" href="#signup">Get started / Sign up</a></div>
 <div class="glass price hot reveal"><h3>WhatsApp line</h3><div class="amt">Contact us</div><p class="mut">Early access</p><ul class="feat"><li>Number tied to extensions</li><li>Send / receive API</li></ul><a class="btn p" href="#contact">Join early access</a></div>
 <div class="glass price reveal"><h3>GSM SIM bridge</h3><div class="amt">Contact us</div><p class="mut">Per line, custom quote</p><ul class="feat"><li>Mobile number → any extension</li><li>Works with SIPDesk</li></ul><a class="btn g" href="#contact">Get a quote</a></div></div>
 <p class="note reveal" style="margin-top:20px">OTP Verify &amp; SMS: free 10-text trial, then USD 0.05 per text. Other services: contact us for a quote.</p></div></section>
