@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f0c674"/><stop offset=".6" stop-color="#d4a04a"/><stop offset="1" stop-color="#8a5a14"/></linearGradient></defs>
+<circle cx="160" cy="90" r="80" fill="#57c28a" opacity=".08"/>
+<path d="M40 52h36l14 14v62H40z" fill="#16202b" stroke="url(#g)" stroke-width="2.5"/><rect x="50" y="78" width="30" height="34" rx="4" fill="url(#g)" opacity=".85"/><path d="M50 95h30M65 78v34" stroke="#16202b" stroke-width="2"/>
+<path d="M100 90H140" stroke="url(#g)" stroke-width="2.5" stroke-dasharray="5 6"/>
+<rect x="140" y="58" width="62" height="64" rx="14" fill="#16202b" stroke="url(#g)" stroke-width="2.5"/><path d="M158 82v16M171 76v28M184 82v16" stroke="url(#g)" stroke-width="3" stroke-linecap="round"/>
+<g stroke="url(#g)" stroke-width="2" stroke-dasharray="5 6" fill="none"><path d="M202 90C230 90 230 44 252 44"/><path d="M202 90H252"/><path d="M202 90C230 90 230 136 252 136"/></g>
+<g font-family="Segoe UI,sans-serif" font-size="10" fill="#e4ddd0"><rect x="252" y="32" width="50" height="24" rx="8" fill="#1f2b38"/><text x="261" y="48">ext 101</text><rect x="252" y="78" width="50" height="24" rx="8" fill="#1f2b38"/><text x="261" y="94">ext 204</text><rect x="252" y="124" width="50" height="24" rx="8" fill="#1f2b38"/><text x="261" y="140">ext 305</text></g></svg>

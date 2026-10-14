@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Neuereatec Enterprise — OTP Verify, WhatsApp line &amp; GSM SIM bridge</title>
+<meta name="description" content="Neuereatec Enterprise: phone verification codes for your apps, a WhatsApp number tied to your office extensions, and a GSM SIM bridge so a regular mobile number reaches any extension.">
+<link rel="icon" href="img/logo.svg" type="image/svg+xml"><link rel="stylesheet" href="style.css"></head>
+<body>
+<header><div class="c nav"><a class="logo" href="#top" style="display:flex;gap:10px;align-items:center;color:var(--txt)"><span class="mark">N</span> NEUEREATEC</a>
+<nav class="links"><a href="#otp">OTP Verify</a><a href="#whatsapp">WhatsApp</a><a href="#gsm">SIM bridge</a><a href="#developers">Developers</a><a href="#pricing">Pricing</a><a class="btn p" href="#contact">Contact</a></nav>
+<button class="burger" aria-label="Menu">☰</button></div></header>
+<main id="top">
+<div class="c hero">
+<div class="reveal"><p class="eye">Neuereatec Enterprise · Messaging &amp; voice</p>
+<h1>Every number. Every message. <span class="gt">One line.</span></h1>
+<p class="lead">Send login codes to any phone, answer WhatsApp calls and chats on your office extensions, and let a regular mobile number ring straight through to your team. One platform, run by Neuereatec.</p>
+<div class="cta"><a class="btn p" href="#otp">See OTP Verify</a><a class="btn g" href="#developers">Developer quick start</a></div>
+<div class="chips"><span class="chip">SMS verification codes</span><span class="chip">WhatsApp on your extensions</span><span class="chip">Mobile number → any extension</span></div></div>
+<div class="reveal"><img class="hero-art" src="img/hero-platform.svg" alt="OTP Verify, WhatsApp and the SIM bridge connected into one Neuereatec platform"></div></div>
+
+<section id="otp"><div class="c">
+<div class="reveal" style="max-width:760px"><p class="eye">The headline · OTP / SMS Verify API</p><h2>Verify a phone number in two API calls.</h2>
+<p class="lead">Your app asks us to send a code. We text it from our GSM gateway. The user types it in, you ask us to check it. Sign-up confirmation, passwordless login and two-step checks, without running your own SMS stack.</p></div>
+<div class="demo reveal" id="demo" style="margin-top:40px">
+<div class="glass term"><div class="bar"><i></i><i></i><i></i><span>your-server — terminal</span></div>
+<pre><span class="line"><span class="cm"># 1. Send a code</span></span>
+<span class="line"><span class="k">curl</span> -X POST https://api.example.com/api/v1/otp/send \</span>
+<span class="line">  -H <span class="s">"Authorization: Bearer YOUR_API_KEY"</span> \</span>
+<span class="line">  -d <span class="s">'{"to":"+15551234567","app_name":"MyApp"}'</span></span>
+<span class="line"><span class="o">→ {"id":"otp_8f2c1a","status":"sent","expires_in":300}</span></span>
+<span class="line"> </span>
+<span class="line"><span class="cm"># 2. Check what the user typed</span></span>
+<span class="line"><span class="k">curl</span> -X POST https://api.example.com/api/v1/otp/verify \</span>
+<span class="line">  -d <span class="s">'{"to":"+15551234567","code":"<span class="code">482913</span>"}'</span></span>
+<span class="line"><span class="o">→ {"valid":true,"status":"approved"}</span></span></pre></div>
+<div><div class="phone"><div class="screen"><div class="clock">09:41</div><div class="date">Messages</div>
+<div class="notif"><small><span>MESSAGES</span><span>now</span></small>Your MyApp code is <b class="code">482913</b>. It expires in 5 minutes.</div>
+<div class="otpbox"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+<div class="verified">✓ Verified</div></div></div>
+<div class="replay"><button type="button">↻ Replay demo</button></div></div></div>
+<p class="mut" style="font-size:.85rem;margin-top:14px">Animated illustration, no real messages are sent. Host shown is a placeholder.</p>
+<div class="steps" style="margin-top:44px">
+<div class="glass step reveal"><h3>Request access</h3><p class="mut">Sign up as a developer. We review and approve each account.</p></div>
+<div class="glass step reveal"><h3>Get your API key</h3><p class="mut">Use it as a Bearer token from your own server.</p></div>
+<div class="glass step reveal"><h3>Send a code</h3><p class="mut">POST the phone number. A 6-digit code goes out by SMS.</p></div>
+<div class="glass step reveal"><h3>Verify it</h3><p class="mut">POST the number and code. Get approved or invalid back.</p></div></div>
+</div></section>
+
+<section id="services"><div class="c"><div class="reveal"><p class="eye">One platform</p><h2>Three services, one line into your business.</h2></div>
+<div class="grid3" style="margin-top:34px">
+<a class="glass card reveal" href="#otp"><img class="ill" src="img/otp.svg" alt=""><span class="tag">Live API</span><h3 style="color:var(--txt)">OTP Verify</h3><p class="mut">Phone verification and login codes for web and mobile apps, sent over our GSM gateway.</p><span class="more">How it works →</span></a>
+<a class="glass card reveal" href="#whatsapp"><img class="ill" src="img/chat.svg" alt=""><span class="tag soon">Coming soon</span><h3 style="color:var(--txt)">WhatsApp line</h3><p class="mut">Customers call and message your business WhatsApp number. It rings and lands on your extensions.</p><span class="more">Learn more →</span></a>
+<a class="glass card reveal" href="#gsm"><img class="ill" src="img/sim.svg" alt=""><span class="tag">Available</span><h3 style="color:var(--txt)">GSM SIM bridge</h3><p class="mut">A regular mobile number reaches any office extension. Calls and SMS bridged into your phone system.</p><span class="more">Learn more →</span></a></div></div></section>
+
+<section id="whatsapp"><div class="c grid2">
+<div class="reveal"><p class="eye">WhatsApp line · coming soon</p><h2>Your WhatsApp number, answered at every desk.</h2>
+<p class="lead">Tie a business WhatsApp number to your office extensions. Calls ring the right person, chats go to the right team, and your apps can send and receive messages through one API.</p>
+<ul class="feat"><li>WhatsApp calls ring your extensions or ring groups</li><li>Incoming chats routed by department</li><li>Send and receive messages from your own apps</li><li>Works alongside your existing office phones and SIPDesk</li></ul></div>
+<div class="reveal"><img src="img/chat.svg" alt="Chat bubble routed to an office extension" style="width:100%;max-width:460px;display:block;margin:0 auto 18px">
+<div class="glass term"><div class="bar"><i></i><i></i><i></i><span>illustrative API</span></div><pre><span class="cm"># Send a message</span>
+<span class="k">POST</span> /api/v1/whatsapp/messages
+{<span class="s">"to"</span>:<span class="s">"+15551234567"</span>,<span class="s">"text"</span>:<span class="s">"Your order is ready"</span>}
+
+<span class="cm"># Inbound webhook to your app</span>
+{<span class="s">"event"</span>:<span class="s">"message.received"</span>,<span class="s">"from"</span>:<span class="s">"+15557654321"</span>,
+ <span class="s">"text"</span>:<span class="s">"Thanks!"</span>,<span class="s">"routed_to"</span>:<span class="s">"ext-204"</span>}</pre></div></div></div></section>
+
+<section id="gsm"><div class="c grid2">
+<div class="reveal"><img src="img/sim.svg" alt="SIM card bridged through the gateway to several extensions" style="width:100%;max-width:520px;display:block;margin:auto"></div>
+<div class="reveal"><p class="eye">GSM SIM bridge</p><h2>A regular phone number that reaches any extension.</h2>
+<p class="lead">Our GSM gateway puts local mobile lines inside your business phone system. Customers dial an ordinary mobile number; the call rings the extension, ring group or menu you choose. Staff call out on the same number.</p>
+<ul class="feat"><li>Inbound mobile calls to any extension or IVR</li><li>Outbound calls from desk phones and the SIPDesk softphone</li><li>Send and receive SMS from your PBX or apps</li><li>Also powers the OTP Verify API</li></ul>
+<div class="glass term" style="margin-top:18px"><div class="bar"><i></i><i></i><i></i><span>SMS API</span></div><pre><span class="k">POST</span> /api/v1/sms
+{<span class="s">"to"</span>:<span class="s">"+15551234567"</span>,<span class="s">"message"</span>:<span class="s">"See you at 10:00"</span>,<span class="s">"ref"</span>:<span class="s">"appt-42"</span>}
+<span class="o">→ {"id":"sms_31d9e0","status":"queued"}</span></pre></div></div></div></section>
+
+<section id="developers"><div class="c"><div class="reveal"><p class="eye">Developers</p><h2>Quick start</h2>
+<p class="lead">Base URL <code class="i">https://api.example.com/api/v1</code> (placeholder). JSON in, JSON out. Authenticate with <code class="i">Authorization: Bearer YOUR_API_KEY</code> and keep the key on your server.</p></div>
+<div class="glass term reveal" data-tabs style="margin-top:28px">
+<div class="tabs"><button class="on">Request access</button><button>Send code</button><button>Verify code</button><button>SMS</button><button>Usage</button><button>Errors</button></div>
+<div class="pane on"><pre><span class="k">curl</span> -X POST https://api.example.com/api/v1/signup \
+  -H <span class="s">"Content-Type: application/json"</span> \
+  -d <span class="s">'{"name":"Jane Dev","email":"jane@example.org","company":"Example Ltd","use_case":"Login codes"}'</span>
+<span class="o">→ {"status":"pending","message":"An admin will review your request."}</span>
+<span class="cm"># Once approved, your API key is emailed to you.</span></pre></div>
+<div class="pane"><pre><span class="k">curl</span> -X POST https://api.example.com/api/v1/otp/send \
+  -H <span class="s">"Authorization: Bearer YOUR_API_KEY"</span> -H <span class="s">"Content-Type: application/json"</span> \
+  -d <span class="s">'{"to":"+15551234567","app_name":"MyApp"}'</span>
+<span class="o">→ {"id":"otp_8f2c1a","to":"+15551234567","status":"sent","expires_in":300}</span></pre></div>
+<div class="pane"><pre><span class="k">curl</span> -X POST https://api.example.com/api/v1/otp/verify \
+  -H <span class="s">"Authorization: Bearer YOUR_API_KEY"</span> -H <span class="s">"Content-Type: application/json"</span> \
+  -d <span class="s">'{"to":"+15551234567","code":"482913"}'</span>
+<span class="o">→ {"to":"+15551234567","valid":true,"status":"approved"}</span>
+<span class="o">→ {"to":"+15551234567","valid":false,"status":"invalid","attempts_remaining":2}</span></pre></div>
+<div class="pane"><pre><span class="k">curl</span> -X POST https://api.example.com/api/v1/sms \
+  -H <span class="s">"Authorization: Bearer YOUR_API_KEY"</span> \
+  -d <span class="s">'{"to":"+15551234567","message":"Hello","ref":"appt-42"}'</span>
+<span class="o">→ {"id":"sms_31d9e0","status":"queued","ref":"appt-42"}</span>
+
+<span class="k">curl</span> https://api.example.com/api/v1/sms/sms_31d9e0 -H <span class="s">"Authorization: Bearer YOUR_API_KEY"</span>
+<span class="o">→ {"id":"sms_31d9e0","status":"delivered"}</span>  <span class="cm"># queued | sent | delivered | failed</span></pre></div>
+<div class="pane"><pre><span class="k">curl</span> https://api.example.com/api/v1/usage -H <span class="s">"Authorization: Bearer YOUR_API_KEY"</span>
+<span class="o">→ {"period":"2026-10","otp_sent":1240,"otp_verified":1102,"sms_sent":310}</span></pre></div>
+<div class="pane" style="padding:6px"><table><tr><th>HTTP</th><th>Code</th><th>Meaning</th></tr>
+<tr><td>400</td><td>invalid_request / invalid_phone</td><td>Missing field, or number not in E.164</td></tr>
+<tr><td>401</td><td>unauthorized</td><td>Missing or invalid API key</td></tr>
+<tr><td>403</td><td>forbidden</td><td>Account not approved or disabled</td></tr>
+<tr><td>410</td><td>code_expired</td><td>Code expired, send a new one</td></tr>
+<tr><td>422</td><td>invalid_code</td><td>Wrong code</td></tr>
+<tr><td>429</td><td>rate_limited</td><td>Too many requests or attempts</td></tr>
+<tr><td>503</td><td>gateway_unavailable</td><td>Gateway temporarily unavailable</td></tr></table></div></div>
+<p class="mut reveal" style="margin-top:18px;font-size:.92rem"><b style="color:var(--txt)">Limits:</b> 6-digit codes, valid 5 minutes, limited attempts per code, resend cooldown per number and per-account rate limits. Field names may be refined before general availability.</p></div></section>
+
+<section id="pricing"><div class="c"><div class="reveal"><p class="eye">Pricing</p><h2>Priced to your volume.</h2></div>
+<div class="grid3" style="margin-top:30px">
+<div class="glass price reveal"><h3>OTP Verify &amp; SMS</h3><div class="amt">Contact us</div><p class="mut">Usage based</p><ul class="feat"><li>API key &amp; usage reporting</li><li>Codes over GSM gateway</li></ul><a class="btn g" href="#contact">Get a quote</a></div>
+<div class="glass price hot reveal"><h3>WhatsApp line</h3><div class="amt">Contact us</div><p class="mut">Early access</p><ul class="feat"><li>Number tied to extensions</li><li>Send / receive API</li></ul><a class="btn p" href="#contact">Join early access</a></div>
+<div class="glass price reveal"><h3>GSM SIM bridge</h3><div class="amt">Contact us</div><p class="mut">Per line, custom quote</p><ul class="feat"><li>Mobile number → any extension</li><li>Works with SIPDesk</li></ul><a class="btn g" href="#contact">Get a quote</a></div></div>
+<p class="note reveal" style="margin-top:20px">Prices are not published yet. Contact us for a quote.</p></div></section>
+
+<section id="contact" style="border:0"><div class="c"><div class="glass band reveal"><p class="eye">Contact</p><h2>Ready to connect your numbers?</h2>
+<p class="lead" style="margin:0 auto 26px">Ask for API access, a WhatsApp early-access spot or a SIM bridge quote.</p>
+<a class="btn p" href="mailto:neuereatec@gmail.com?subject=Neuereatec%20services%20enquiry">neuereatec@gmail.com</a></div></div></section>
+</main>
+<footer><div class="c"><div style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:18px"><div><strong style="color:var(--txt)">Neuereatec Enterprise</strong><br>OTP Verify · WhatsApp line · GSM SIM bridge</div><div><a href="mailto:neuereatec@gmail.com">neuereatec@gmail.com</a><a href="https://neuereatec.org/">neuereatec.org</a></div></div>
+<div class="copy">© 2026 Neuereatec Enterprise. All rights reserved.</div></div></footer>
+<script src="app.js"></script></body></html>
