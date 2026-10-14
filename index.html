@@ -18,7 +18,7 @@
 
 <section id="signup"><div class="c"><div class="glass band reveal" style="text-align:left;max-width:680px;margin:0 auto">
 <p class="eye">Start here</p><h2>Get your API key in one minute.</h2>
-<p class="lead" style="margin:0 0 18px">Free trial: <b>10 texts</b>. New keys start in <b>test mode</b>: nothing is delivered, and <code class="i">otp/send</code> returns a <code class="i">test_code</code> so you can build right away. We switch you to live on request; then it is USD 0.05 per text.</p>
+<p class="lead" style="margin:0 0 18px">Free trial: <b>10 texts</b>. Keys are <b>live</b> right away: your 10 trial texts are real SMS to +592 numbers. After the trial it is USD 0.05 per text.</p>
 <form id="su" class="suform"><label>Your name<input name="name" required maxlength="80" autocomplete="name"></label>
 <label>Email<input name="email" type="email" required maxlength="120" autocomplete="email"></label>
 <label>Company / app name<input name="company" required maxlength="30" placeholder="MyApp"></label>
@@ -51,7 +51,7 @@
 <div class="replay"><button type="button">↻ Replay demo</button></div></div></div>
 <p class="mut" style="font-size:.85rem;margin-top:14px">Animated illustration, no real messages are sent.</p>
 <div class="steps" style="margin-top:44px">
-<div class="glass step reveal"><h3>Sign up</h3><p class="mut">One API call. Your account is approved instantly, in test mode, with 10 free texts.</p></div>
+<div class="glass step reveal"><h3>Sign up</h3><p class="mut">One API call. Your account is approved instantly, live, with 10 free texts.</p></div>
 <div class="glass step reveal"><h3>Claim your API key</h3><p class="mut">Collect it once with your claim token. Use it as a Bearer token from your own server.</p></div>
 <div class="glass step reveal"><h3>Send a code</h3><p class="mut">POST the phone number. A 6-digit code goes out by SMS (valid 10 minutes).</p></div>
 <div class="glass step reveal"><h3>Verify it</h3><p class="mut">POST the number and code. Get approved or invalid back.</p></div></div>
@@ -92,18 +92,18 @@
 <div class="pane on"><pre><span class="k">curl</span> -X POST https://api.neuereatec.org/api/v1/signup -H <span class="s">"Content-Type: application/json"</span> \
   -d <span class="s">'{"name":"Jane Dev","email":"jane@example.org","company":"Example Ltd","use_case":"Login codes for our app"}'</span>
 <span class="o">→ {"request_id":"SR3f9a0c1d2e4b5a67","status":"approved","plan":"trial","trial_remaining":10,
-   "test_mode":true,"claim_token":"nc_…"}</span>
+   "test_mode":false,"claim_token":"nc_…"}</span>
 
 <span class="cm"># Collect your key once (keep it on your server)</span>
 <span class="k">curl</span> https://api.neuereatec.org/api/v1/signup/SR3f9a0c1d2e4b5a67 -H <span class="s">"X-Claim-Token: nc_…"</span>
-<span class="o">→ {"status":"approved","api_key":"nk_test_…","customer_id":"example-ltd","test_mode":true,
+<span class="o">→ {"status":"approved","api_key":"nk_live_…","customer_id":"example-ltd","test_mode":false,
    "plan":"trial","trial_remaining":10}</span></pre></div>
 <div class="pane"><pre><span class="k">curl</span> -X POST https://api.neuereatec.org/api/v1/otp/send \
   -H <span class="s">"Authorization: Bearer YOUR_API_KEY"</span> -H <span class="s">"Content-Type: application/json"</span> \
   -d <span class="s">'{"to":"+5926001234","app_name":"MyApp"}'</span>
 <span class="o">→ {"sid":"VE5c1b…","status":"pending","to":"+5926001234","channel":"sms","valid":false,
    "expires_at":"2026-10-14T13:50:00.000Z","message_id":"SM9d2e…"}</span>
-<span class="cm"># Test-mode keys also get "test_code" so you can test without a real SMS.</span></pre></div>
+<span class="cm"># Live keys send a real SMS. (Accounts in test mode get "test_code" instead.)</span></pre></div>
 <div class="pane"><pre><span class="k">curl</span> -X POST https://api.neuereatec.org/api/v1/otp/verify \
   -H <span class="s">"Authorization: Bearer YOUR_API_KEY"</span> -H <span class="s">"Content-Type: application/json"</span> \
   -d <span class="s">'{"to":"+5926001234","code":"482913"}'</span>
@@ -121,7 +121,7 @@
 <span class="o">→ {"period":"2026-10","messages":12,"parts":13,"otp":{"sent":10,"approved":9},
    "quota":{"monthly_parts":2000,"used":13,"remaining":1987},
    "amount":{"total":0,"currency":"USD","price_per_part":0.05},
-   "test_mode":true,"plan":"trial","trial_remaining":0}</span></pre></div>
+   "test_mode":false,"plan":"trial","trial_remaining":0}</span></pre></div>
 <div class="pane" style="padding:6px"><table><tr><th>HTTP</th><th>Code</th><th>Meaning</th></tr>
 <tr><td>400</td><td>invalid_request / invalid_to / invalid_message / message_too_long / invalid_code</td><td>Missing field, number not E.164, or bad code format</td></tr>
 <tr><td>401</td><td>unauthorized</td><td>Missing or invalid API key</td></tr>
@@ -131,11 +131,11 @@
 <tr><td>429</td><td>rate_limited_* / quota_exceeded</td><td>Too many requests; see retry_after</td></tr></table>
 <pre><span class="o">{"error":"trial_exhausted","message":"Free trial used. Pick a plan (from $0.05/text) to continue",
  "plan":"trial","trial_remaining":0,"plans":[{"plan":"payg","price_per_text":0.05,"currency":"USD"}]}</span></pre></div></div>
-<p class="mut reveal" style="margin-top:18px;font-size:.92rem"><b style="color:var(--txt)">New keys start in test mode:</b> nothing is delivered, messages show as sent and <code class="i">otp/send</code> returns a <code class="i">test_code</code>. We switch your account to live sending on request. <b style="color:var(--txt)">Limits:</b> 6-digit codes valid 10 minutes, 5 attempts per code, 3 codes per number per 10 minutes, 5 texts/min and 50 texts/day per account, +592 numbers by default.</p></div></section>
+<p class="mut reveal" style="margin-top:18px;font-size:.92rem"><b style="color:var(--txt)">New keys are live:</b> the 10 free trial texts are real SMS; after that a plan is needed (HTTP 402 <code class="i">trial_exhausted</code>). <b style="color:var(--txt)">Limits:</b> 6-digit codes valid 10 minutes, 5 attempts per code, 3 codes per number per 10 minutes, 5 texts/min and 50 texts/day per account, +592 numbers by default.</p></div></section>
 
 <section id="pricing"><div class="c"><div class="reveal"><p class="eye">Pricing</p><h2>Priced to your volume.</h2></div>
 <div class="grid3" style="margin-top:30px">
-<div class="glass price reveal"><h3>OTP Verify &amp; SMS</h3><div class="amt">$0.05</div><p class="mut">USD per text (SMS part), pay as you go</p><ul class="feat"><li>Free trial: 10 texts</li><li>New keys start in test mode</li><li>API key &amp; usage reporting</li></ul><a class="btn p" href="#signup">Get started / Sign up</a></div>
+<div class="glass price reveal"><h3>OTP Verify &amp; SMS</h3><div class="amt">$0.05</div><p class="mut">USD per text (SMS part), pay as you go</p><ul class="feat"><li>Free trial: 10 texts</li><li>Live keys, real SMS from day one</li><li>API key &amp; usage reporting</li></ul><a class="btn p" href="#signup">Get started / Sign up</a></div>
 <div class="glass price hot reveal"><h3>WhatsApp line</h3><div class="amt">Contact us</div><p class="mut">Early access</p><ul class="feat"><li>Number tied to extensions</li><li>Send / receive API</li></ul><a class="btn p" href="#contact">Join early access</a></div>
 <div class="glass price reveal"><h3>GSM SIM bridge</h3><div class="amt">Contact us</div><p class="mut">Per line, custom quote</p><ul class="feat"><li>Mobile number → any extension</li><li>Works with SIPDesk</li></ul><a class="btn g" href="#contact">Get a quote</a></div></div>
 <p class="note reveal" style="margin-top:20px">OTP Verify &amp; SMS: free 10-text trial, then USD 0.05 per text. Other services: contact us for a quote.</p></div></section>

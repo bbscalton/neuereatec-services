@@ -23,6 +23,6 @@ const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.message||'Sign
 if(j.status!=='approved'){E.textContent='Thanks! Your request '+j.request_id+' is waiting for approval. Save this claim token to collect your key later: '+j.claim_token;B.disabled=false;return}
 const k=await (await fetch(API+'/signup/'+j.request_id,{headers:{'x-claim-token':j.claim_token}})).json();if(!k.api_key)throw new Error(k.message||'Could not collect your key. Email neuereatec@gmail.com with request '+j.request_id+'.');
 document.getElementById('sukey').textContent=k.api_key;
-document.getElementById('suinfo').textContent='Plan: '+(k.plan||'trial')+(k.trial_remaining!=null?' · '+k.trial_remaining+' free texts':'')+' · '+(k.test_mode?'Test mode (nothing delivered until we switch you to live)':'Live');
+document.getElementById('suinfo').textContent='Plan: '+(k.plan||'trial')+(k.trial_remaining!=null?' · '+k.trial_remaining+' free texts':'')+' · '+(k.test_mode?'Test mode (nothing delivered)':'Live: your trial texts are real SMS');
 su.hidden=true;document.getElementById('suout').hidden=false}catch(x){E.textContent=x.message;B.disabled=false}});
 document.getElementById('sucopy').onclick=e=>navigator.clipboard.writeText(document.getElementById('sukey').textContent).then(()=>e.target.textContent='Copied ✓');}
