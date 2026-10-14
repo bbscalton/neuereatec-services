@@ -22,25 +22,26 @@
 <div class="demo reveal" id="demo" style="margin-top:40px">
 <div class="glass term"><div class="bar"><i></i><i></i><i></i><span>your-server — terminal</span></div>
 <pre><span class="line"><span class="cm"># 1. Send a code</span></span>
-<span class="line"><span class="k">curl</span> -X POST https://api.example.com/api/v1/otp/send \</span>
+<span class="line"><span class="k">curl</span> -X POST https://api.neuereatec.org/api/v1/otp/send \</span>
 <span class="line">  -H <span class="s">"Authorization: Bearer YOUR_API_KEY"</span> \</span>
-<span class="line">  -d <span class="s">'{"to":"+15551234567","app_name":"MyApp"}'</span></span>
-<span class="line"><span class="o">→ {"id":"otp_8f2c1a","status":"sent","expires_in":300}</span></span>
+<span class="line">  -d <span class="s">'{"to":"+5926001234","app_name":"MyApp"}'</span></span>
+<span class="line"><span class="o">→ {"sid":"VE5c1b…","status":"pending","valid":false}</span></span>
 <span class="line"> </span>
 <span class="line"><span class="cm"># 2. Check what the user typed</span></span>
-<span class="line"><span class="k">curl</span> -X POST https://api.example.com/api/v1/otp/verify \</span>
-<span class="line">  -d <span class="s">'{"to":"+15551234567","code":"<span class="code">482913</span>"}'</span></span>
+<span class="line"><span class="k">curl</span> -X POST https://api.neuereatec.org/api/v1/otp/verify \</span>
+<span class="line">  -H <span class="s">"Authorization: Bearer YOUR_API_KEY"</span> \</span>
+<span class="line">  -d <span class="s">'{"to":"+5926001234","code":"<span class="code">482913</span>"}'</span></span>
 <span class="line"><span class="o">→ {"valid":true,"status":"approved"}</span></span></pre></div>
 <div><div class="phone"><div class="screen"><div class="clock">09:41</div><div class="date">Messages</div>
-<div class="notif"><small><span>MESSAGES</span><span>now</span></small>Your MyApp code is <b class="code">482913</b>. It expires in 5 minutes.</div>
+<div class="notif"><small><span>MESSAGES</span><span>now</span></small>Your MyApp verification code is: <b class="code">482913</b>. Valid 10 minutes.</div>
 <div class="otpbox"><span></span><span></span><span></span><span></span><span></span><span></span></div>
 <div class="verified">✓ Verified</div></div></div>
 <div class="replay"><button type="button">↻ Replay demo</button></div></div></div>
-<p class="mut" style="font-size:.85rem;margin-top:14px">Animated illustration, no real messages are sent. Host shown is a placeholder.</p>
+<p class="mut" style="font-size:.85rem;margin-top:14px">Animated illustration, no real messages are sent.</p>
 <div class="steps" style="margin-top:44px">
-<div class="glass step reveal"><h3>Request access</h3><p class="mut">Sign up as a developer. We review and approve each account.</p></div>
-<div class="glass step reveal"><h3>Get your API key</h3><p class="mut">Use it as a Bearer token from your own server.</p></div>
-<div class="glass step reveal"><h3>Send a code</h3><p class="mut">POST the phone number. A 6-digit code goes out by SMS.</p></div>
+<div class="glass step reveal"><h3>Sign up</h3><p class="mut">One API call. Your account is approved instantly, in test mode, with 10 free texts.</p></div>
+<div class="glass step reveal"><h3>Claim your API key</h3><p class="mut">Collect it once with your claim token. Use it as a Bearer token from your own server.</p></div>
+<div class="glass step reveal"><h3>Send a code</h3><p class="mut">POST the phone number. A 6-digit code goes out by SMS (valid 10 minutes).</p></div>
 <div class="glass step reveal"><h3>Verify it</h3><p class="mut">POST the number and code. Get approved or invalid back.</p></div></div>
 </div></section>
 
@@ -57,7 +58,7 @@
 <div class="reveal"><img src="img/chat.svg" alt="Chat bubble routed to an office extension" style="width:100%;max-width:460px;display:block;margin:0 auto 18px">
 <div class="glass term"><div class="bar"><i></i><i></i><i></i><span>illustrative API</span></div><pre><span class="cm"># Send a message</span>
 <span class="k">POST</span> /api/v1/whatsapp/messages
-{<span class="s">"to"</span>:<span class="s">"+15551234567"</span>,<span class="s">"text"</span>:<span class="s">"Your order is ready"</span>}
+{<span class="s">"to"</span>:<span class="s">"+5926001234"</span>,<span class="s">"text"</span>:<span class="s">"Your order is ready"</span>}
 
 <span class="cm"># Inbound webhook to your app</span>
 {<span class="s">"event"</span>:<span class="s">"message.received"</span>,<span class="s">"from"</span>:<span class="s">"+15557654321"</span>,
@@ -69,52 +70,63 @@
 <p class="lead">Our GSM gateway puts local mobile lines inside your business phone system. Customers dial an ordinary mobile number; the call rings the extension, ring group or menu you choose. Staff call out on the same number.</p>
 <ul class="feat"><li>Inbound mobile calls to any extension or IVR</li><li>Outbound calls from desk phones and the SIPDesk softphone</li><li>Send and receive SMS from your PBX or apps</li><li>Also powers the OTP Verify API</li></ul>
 <div class="glass term" style="margin-top:18px"><div class="bar"><i></i><i></i><i></i><span>SMS API</span></div><pre><span class="k">POST</span> /api/v1/sms
-{<span class="s">"to"</span>:<span class="s">"+15551234567"</span>,<span class="s">"message"</span>:<span class="s">"See you at 10:00"</span>,<span class="s">"ref"</span>:<span class="s">"appt-42"</span>}
-<span class="o">→ {"id":"sms_31d9e0","status":"queued"}</span></pre></div></div></div></section>
+{<span class="s">"to"</span>:<span class="s">"+5926001234"</span>,<span class="s">"message"</span>:<span class="s">"See you at 10:00"</span>,<span class="s">"ref"</span>:<span class="s">"appt-42"</span>}
+<span class="o">→ {"id":"SM0a1b…","status":"queued","parts":1}</span></pre></div></div></div></section>
 
 <section id="developers"><div class="c"><div class="reveal"><p class="eye">Developers</p><h2>Quick start</h2>
-<p class="lead">Base URL <code class="i">https://api.example.com/api/v1</code> (placeholder). JSON in, JSON out. Authenticate with <code class="i">Authorization: Bearer YOUR_API_KEY</code> and keep the key on your server.</p></div>
+<p class="lead">Base URL <code class="i">https://api.neuereatec.org/api/v1</code>. Full reference: <a href="https://api.neuereatec.org/api/v1/docs">api.neuereatec.org/api/v1/docs</a>. JSON in, JSON out. Authenticate with <code class="i">Authorization: Bearer YOUR_API_KEY</code> and keep the key on your server.</p></div>
 <div class="glass term reveal" data-tabs style="margin-top:28px">
-<div class="tabs"><button class="on">Request access</button><button>Send code</button><button>Verify code</button><button>SMS</button><button>Usage</button><button>Errors</button></div>
-<div class="pane on"><pre><span class="k">curl</span> -X POST https://api.example.com/api/v1/signup \
-  -H <span class="s">"Content-Type: application/json"</span> \
-  -d <span class="s">'{"name":"Jane Dev","email":"jane@example.org","company":"Example Ltd","use_case":"Login codes"}'</span>
-<span class="o">→ {"status":"pending","message":"An admin will review your request."}</span>
-<span class="cm"># Once approved, your API key is emailed to you.</span></pre></div>
-<div class="pane"><pre><span class="k">curl</span> -X POST https://api.example.com/api/v1/otp/send \
-  -H <span class="s">"Authorization: Bearer YOUR_API_KEY"</span> -H <span class="s">"Content-Type: application/json"</span> \
-  -d <span class="s">'{"to":"+15551234567","app_name":"MyApp"}'</span>
-<span class="o">→ {"id":"otp_8f2c1a","to":"+15551234567","status":"sent","expires_in":300}</span></pre></div>
-<div class="pane"><pre><span class="k">curl</span> -X POST https://api.example.com/api/v1/otp/verify \
-  -H <span class="s">"Authorization: Bearer YOUR_API_KEY"</span> -H <span class="s">"Content-Type: application/json"</span> \
-  -d <span class="s">'{"to":"+15551234567","code":"482913"}'</span>
-<span class="o">→ {"to":"+15551234567","valid":true,"status":"approved"}</span>
-<span class="o">→ {"to":"+15551234567","valid":false,"status":"invalid","attempts_remaining":2}</span></pre></div>
-<div class="pane"><pre><span class="k">curl</span> -X POST https://api.example.com/api/v1/sms \
-  -H <span class="s">"Authorization: Bearer YOUR_API_KEY"</span> \
-  -d <span class="s">'{"to":"+15551234567","message":"Hello","ref":"appt-42"}'</span>
-<span class="o">→ {"id":"sms_31d9e0","status":"queued","ref":"appt-42"}</span>
+<div class="tabs"><button class="on">Sign up</button><button>Send code</button><button>Verify code</button><button>SMS</button><button>Usage</button><button>Errors</button></div>
+<div class="pane on"><pre><span class="k">curl</span> -X POST https://api.neuereatec.org/api/v1/signup -H <span class="s">"Content-Type: application/json"</span> \
+  -d <span class="s">'{"name":"Jane Dev","email":"jane@example.org","company":"Example Ltd","use_case":"Login codes for our app"}'</span>
+<span class="o">→ {"request_id":"SR3f9a0c1d2e4b5a67","status":"approved","plan":"trial","trial_remaining":10,
+   "test_mode":true,"claim_token":"nc_…"}</span>
 
-<span class="k">curl</span> https://api.example.com/api/v1/sms/sms_31d9e0 -H <span class="s">"Authorization: Bearer YOUR_API_KEY"</span>
-<span class="o">→ {"id":"sms_31d9e0","status":"delivered"}</span>  <span class="cm"># queued | sent | delivered | failed</span></pre></div>
-<div class="pane"><pre><span class="k">curl</span> https://api.example.com/api/v1/usage -H <span class="s">"Authorization: Bearer YOUR_API_KEY"</span>
-<span class="o">→ {"period":"2026-10","otp_sent":1240,"otp_verified":1102,"sms_sent":310}</span></pre></div>
+<span class="cm"># Collect your key once (keep it on your server)</span>
+<span class="k">curl</span> https://api.neuereatec.org/api/v1/signup/SR3f9a0c1d2e4b5a67 -H <span class="s">"X-Claim-Token: nc_…"</span>
+<span class="o">→ {"status":"approved","api_key":"nk_test_…","customer_id":"example-ltd","test_mode":true,
+   "plan":"trial","trial_remaining":10}</span></pre></div>
+<div class="pane"><pre><span class="k">curl</span> -X POST https://api.neuereatec.org/api/v1/otp/send \
+  -H <span class="s">"Authorization: Bearer YOUR_API_KEY"</span> -H <span class="s">"Content-Type: application/json"</span> \
+  -d <span class="s">'{"to":"+5926001234","app_name":"MyApp"}'</span>
+<span class="o">→ {"sid":"VE5c1b…","status":"pending","to":"+5926001234","channel":"sms","valid":false,
+   "expires_at":"2026-10-14T13:50:00.000Z","message_id":"SM9d2e…"}</span>
+<span class="cm"># Test-mode keys also get "test_code" so you can test without a real SMS.</span></pre></div>
+<div class="pane"><pre><span class="k">curl</span> -X POST https://api.neuereatec.org/api/v1/otp/verify \
+  -H <span class="s">"Authorization: Bearer YOUR_API_KEY"</span> -H <span class="s">"Content-Type: application/json"</span> \
+  -d <span class="s">'{"to":"+5926001234","code":"482913"}'</span>
+<span class="o">→ {"sid":"VE5c1b…","status":"approved","valid":true,"attempts_left":0}</span>
+<span class="o">→ {"sid":"VE5c1b…","status":"pending","valid":false,"attempts_left":4}</span>
+<span class="cm"># status: pending | approved | canceled | expired | max_attempts_reached</span></pre></div>
+<div class="pane"><pre><span class="k">curl</span> -X POST https://api.neuereatec.org/api/v1/sms \
+  -H <span class="s">"Authorization: Bearer YOUR_API_KEY"</span> -H <span class="s">"Content-Type: application/json"</span> \
+  -d <span class="s">'{"to":"+5926001234","message":"Hello","ref":"appt-42"}'</span>
+<span class="o">→ {"id":"SM0a1b…","status":"queued","ref":"appt-42","parts":1,"encoding":"GSM-7"}</span>
+
+<span class="k">curl</span> https://api.neuereatec.org/api/v1/sms/SM0a1b… -H <span class="s">"Authorization: Bearer YOUR_API_KEY"</span>
+<span class="o">→ {"id":"SM0a1b…","status":"sent"}</span>  <span class="cm"># queued | sent | failed | expired</span></pre></div>
+<div class="pane"><pre><span class="k">curl</span> https://api.neuereatec.org/api/v1/usage -H <span class="s">"Authorization: Bearer YOUR_API_KEY"</span>
+<span class="o">→ {"period":"2026-10","messages":12,"parts":13,"otp":{"sent":10,"approved":9},
+   "quota":{"monthly_parts":2000,"used":13,"remaining":1987},
+   "amount":{"total":0,"currency":"USD","price_per_part":0.05},
+   "test_mode":true,"plan":"trial","trial_remaining":0}</span></pre></div>
 <div class="pane" style="padding:6px"><table><tr><th>HTTP</th><th>Code</th><th>Meaning</th></tr>
-<tr><td>400</td><td>invalid_request / invalid_phone</td><td>Missing field, or number not in E.164</td></tr>
+<tr><td>400</td><td>invalid_request / invalid_to / invalid_message / message_too_long / invalid_code</td><td>Missing field, number not E.164, or bad code format</td></tr>
 <tr><td>401</td><td>unauthorized</td><td>Missing or invalid API key</td></tr>
-<tr><td>403</td><td>forbidden</td><td>Account not approved or disabled</td></tr>
-<tr><td>410</td><td>code_expired</td><td>Code expired, send a new one</td></tr>
-<tr><td>422</td><td>invalid_code</td><td>Wrong code</td></tr>
-<tr><td>429</td><td>rate_limited</td><td>Too many requests or attempts</td></tr>
-<tr><td>503</td><td>gateway_unavailable</td><td>Gateway temporarily unavailable</td></tr></table></div></div>
-<p class="mut reveal" style="margin-top:18px;font-size:.92rem"><b style="color:var(--txt)">Limits:</b> 6-digit codes, valid 5 minutes, limited attempts per code, resend cooldown per number and per-account rate limits. Field names may be refined before general availability.</p></div></section>
+<tr><td>402</td><td>trial_exhausted</td><td>Free trial used. Pick a plan (from $0.05/text) to continue</td></tr>
+<tr><td>403</td><td>account_disabled / destination_not_allowed</td><td>Account disabled, or number prefix not allowed</td></tr>
+<tr><td>404</td><td>not_found</td><td>Unknown message or no verification for that number</td></tr>
+<tr><td>429</td><td>rate_limited_* / quota_exceeded</td><td>Too many requests; see retry_after</td></tr></table>
+<pre><span class="o">{"error":"trial_exhausted","message":"Free trial used. Pick a plan (from $0.05/text) to continue",
+ "plan":"trial","trial_remaining":0,"plans":[{"plan":"payg","price_per_text":0.05,"currency":"USD"}]}</span></pre></div></div>
+<p class="mut reveal" style="margin-top:18px;font-size:.92rem"><b style="color:var(--txt)">New keys start in test mode:</b> nothing is delivered, messages show as sent and <code class="i">otp/send</code> returns a <code class="i">test_code</code>. We switch your account to live sending on request. <b style="color:var(--txt)">Limits:</b> 6-digit codes valid 10 minutes, 5 attempts per code, 3 codes per number per 10 minutes, 5 texts/min and 50 texts/day per account, +592 numbers by default.</p></div></section>
 
 <section id="pricing"><div class="c"><div class="reveal"><p class="eye">Pricing</p><h2>Priced to your volume.</h2></div>
 <div class="grid3" style="margin-top:30px">
-<div class="glass price reveal"><h3>OTP Verify &amp; SMS</h3><div class="amt">Contact us</div><p class="mut">Usage based</p><ul class="feat"><li>API key &amp; usage reporting</li><li>Codes over GSM gateway</li></ul><a class="btn g" href="#contact">Get a quote</a></div>
+<div class="glass price reveal"><h3>OTP Verify &amp; SMS</h3><div class="amt">$0.05</div><p class="mut">USD per text (SMS part), pay as you go</p><ul class="feat"><li>Free trial: 10 texts</li><li>New keys start in test mode</li><li>API key &amp; usage reporting</li></ul><a class="btn g" href="#developers">Start free</a></div>
 <div class="glass price hot reveal"><h3>WhatsApp line</h3><div class="amt">Contact us</div><p class="mut">Early access</p><ul class="feat"><li>Number tied to extensions</li><li>Send / receive API</li></ul><a class="btn p" href="#contact">Join early access</a></div>
 <div class="glass price reveal"><h3>GSM SIM bridge</h3><div class="amt">Contact us</div><p class="mut">Per line, custom quote</p><ul class="feat"><li>Mobile number → any extension</li><li>Works with SIPDesk</li></ul><a class="btn g" href="#contact">Get a quote</a></div></div>
-<p class="note reveal" style="margin-top:20px">Prices are not published yet. Contact us for a quote.</p></div></section>
+<p class="note reveal" style="margin-top:20px">OTP Verify &amp; SMS: free 10-text trial, then USD 0.05 per text. Other services: contact us for a quote.</p></div></section>
 
 <section id="contact" style="border:0"><div class="c"><div class="glass band reveal"><p class="eye">Contact</p><h2>Ready to connect your numbers?</h2>
 <p class="lead" style="margin:0 auto 26px">Ask for API access, a WhatsApp early-access spot or a SIM bridge quote.</p>
