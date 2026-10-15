@@ -1,0 +1,150 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Self-hosted OpenMPTCProuter bonding — step-by-step guide | Neuereatec</title>
+<meta name="description" content="Bond 5 Starlink dishes and a cellular modem with OpenMPTCProuter, using your own far-end server with a public IP instead of a cloud VPS.">
+<style>
+:root{--bg:#0e141b;--bg2:#111a23;--line:rgba(244,239,230,.12);--txt:#f4efe6;--mut:#9aa6b2;--a1:#d4a04a;--a2:#f0c674;--a3:#57c28a;--red:#e2725b;--grad:linear-gradient(135deg,#f0c674,#d4a04a 55%,#8a5a14);--glass:rgba(22,32,43,.7);--card:#16202b}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;font-family:"Segoe UI Variable","Segoe UI",system-ui,-apple-system,Roboto,sans-serif;background:var(--bg);color:var(--txt);line-height:1.65;-webkit-font-smoothing:antialiased}
+body:before{content:"";position:fixed;inset:-20%;z-index:-1;background:radial-gradient(40% 35% at 15% 10%,rgba(212,160,74,.22),transparent 70%),radial-gradient(35% 30% at 90% 20%,rgba(240,198,116,.14),transparent 70%),radial-gradient(40% 40% at 60% 100%,rgba(87,194,138,.08),transparent 70%)}
+a{color:var(--a2);text-decoration:none}a:hover{text-decoration:underline}
+.c{max-width:980px;margin:auto;padding:0 24px}
+header{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);background:rgba(14,20,27,.88);border-bottom:1px solid var(--line)}
+.nav{display:flex;align-items:center;justify-content:space-between;height:64px}
+.logo{color:#fff;font-weight:800;letter-spacing:-.02em;font-size:1.1rem}
+.btn{display:inline-flex;padding:10px 18px;border-radius:999px;font-weight:650;font-size:.93rem;background:var(--a1);color:#0e141b}.btn.g{background:var(--glass);color:#fff;border:1px solid var(--line)}
+h1,h2,h3{font-family:Fraunces,Georgia,"Times New Roman",serif;font-weight:600;letter-spacing:-.01em;line-height:1.15;margin:0 0 .5em}
+h1{font-size:clamp(2.1rem,5vw,3.6rem)}h2{font-size:clamp(1.5rem,3vw,2.1rem);margin-top:.2em}h3{font-size:1.15rem;margin-top:1.2em}
+.gt{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.eye{display:inline-block;color:var(--a2);font-size:.8rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;margin-bottom:12px}
+.hero{padding:64px 0 28px}.lead{color:var(--mut);font-size:1.12rem;max-width:720px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:28px;margin:22px 0}
+.num{display:inline-flex;width:34px;height:34px;border-radius:50%;background:var(--grad);color:#0e141b;font-weight:800;align-items:center;justify-content:center;margin-right:10px;font-family:system-ui}
+.warn{border:1px solid rgba(226,114,91,.6);background:linear-gradient(135deg,rgba(226,114,91,.16),rgba(212,160,74,.08));border-radius:18px;padding:26px;margin:26px 0}
+.warn h2{color:#ffb39f;font-size:1.5rem}
+.note{border-left:3px solid var(--a1);background:var(--glass);padding:12px 16px;border-radius:0 10px 10px 0;margin:14px 0;color:#e8e1d3}
+pre{background:#0a0f14;border:1px solid var(--line);border-radius:12px;padding:14px 16px;overflow:auto;font-size:.87rem;line-height:1.5}
+code{font-family:ui-monospace,Consolas,Menlo,monospace;color:#f0d9a8}p code,li code{background:rgba(255,255,255,.06);padding:1px 6px;border-radius:6px}
+table{width:100%;border-collapse:collapse;font-size:.93rem}td,th{border-bottom:1px solid var(--line);padding:9px 8px;text-align:left;vertical-align:top}th{color:var(--a2)}
+.toc{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:8px}.toc a{background:var(--glass);border:1px solid var(--line);border-radius:10px;padding:9px 12px;color:var(--txt)}
+ol li,ul li{margin:5px 0}.mut{color:var(--mut)}
+footer{border-top:1px solid var(--line);margin-top:50px;padding:28px 0;color:var(--mut);font-size:.9rem}
+</style></head><body>
+<header><div class="c nav"><a class="logo" href="index.html">Neuereatec</a><a class="btn g" href="bonding.html">See the animated diagram →</a></div></header>
+<main class="c">
+<section class="hero">
+<span class="eye">Step-by-step guide · OpenMPTCProuter v0.64.x</span>
+<h1>Self-hosted <span class="gt">link bonding</span> without a cloud provider</h1>
+<p class="lead">Bond 5 Starlink dishes and 1 cellular modem on a mini PC running OpenMPTCProuter (OMR), tunnelled to your own always-on far-end box on a separate internet line with a real public IP. The far end merges every path and hands you one public address.</p>
+<p><a class="btn" href="bonding.html">See the animated diagram</a></p>
+</section>
+
+<div class="warn"><h2>⚠ Read this first: the far-end line is the speed ceiling</h2>
+<p><strong>Total bonded speed can never exceed the far-end line's own upload and download.</strong> Every byte you download is first received by the far-end box and then sent back <em>up</em> its line to you, so your bonded download is capped by the far-end <strong>upload</strong>; your bonded upload is capped by the far-end <strong>download</strong>.</p>
+<p><strong>If the public-IP line sits at the same shop</strong>, the bonded traffic goes out over the dishes and comes straight back in on that same line. Bonding then mainly adds <strong>failover</strong> (one stable public IP that survives a dish dropping), not extra speed. For real speed gains, put the far-end box somewhere else, on a line with more upload than all your WANs combined.</p></div>
+
+<div class="card"><h3 style="margin-top:0">Contents</h3><div class="toc">
+<a href="#s1">1. Hardware &amp; software</a><a href="#s2">2. OMR on the mini PC</a><a href="#s3">3. Far-end server</a><a href="#s4">4. MPTCP kernel</a><a href="#s5">5. Routing</a><a href="#s6">6. Testing</a><a href="#s7">7. Failures &amp; fixes</a><a href="#src">Sources</a></div></div>
+
+<section class="card" id="s1"><h2><span class="num">1</span>Hardware &amp; software at each end</h2>
+<table><tr><th></th><th>Shop end (OMR router)</th><th>Far end (merge server)</th></tr>
+<tr><td>Box</td><td>x86_64 mini PC (e.g. Intel N100 class, 8 GB RAM, SSD) with <strong>6+ Ethernet ports</strong> — or fewer ports plus USB 3 NICs, or one trunk port into a <strong>managed switch with VLANs</strong> (one VLAN per dish)</td><td>Always-on PC or small server, wired to a router that has a <strong>real public IPv4</strong> (not CGNAT)</td></tr>
+<tr><td>WANs</td><td>5 × Starlink (each router in bypass mode, or its Ethernet adapter) + 1 × cellular modem / USB dongle (or LTE router in bridge mode)</td><td>One wired line, ideally fibre with symmetric speed</td></tr>
+<tr><td>LAN</td><td>1 port to the shop switch / Wi-Fi AP</td><td>—</td></tr>
+<tr><td>OS</td><td>OpenMPTCProuter 0.64.x x86_64 image</td><td><strong>Debian 12</strong> (preferred; script also supports Debian 13) or <strong>Ubuntu 22.04</strong> — bare metal</td></tr>
+<tr><td>Power</td><td colspan="2">UPS on both ends; enable "power on after AC loss" in the BIOS of both boxes</td></tr></table>
+<div class="note">Raspberry Pi / NanoPi builds can run OMR with only a VLAN switch, but with 6 WANs a mini PC has far more CPU headroom for the encrypted tunnel.</div></section>
+
+<section class="card" id="s2"><h2><span class="num">2</span>Install &amp; configure OMR on the mini PC</h2>
+<h3>2.1 Flash the image</h3><ol>
+<li>Download the <strong>x86_64 factory</strong> image for v0.64.x from <a href="https://www.openmptcprouter.com/">openmptcprouter.com</a> (<em>sysupgrade</em> images are only for upgrades).</li>
+<li>Write it to the mini PC's SSD / NVMe or a USB key with balenaEtcher, or on Linux:</li></ol>
+<pre><code>gunzip openmptcprouter-*.img.gz
+dd bs=4M if=openmptcprouter-*.img of=/dev/sdX conv=fsync</code></pre>
+<ol start="3"><li>Boot the mini PC, plug a laptop into the LAN port, and open <code>http://192.168.100.1/</code>. Login <code>root</code> with an empty password — <strong>set a password immediately</strong> (System → Administration).</li></ol>
+<h3>2.2 Prepare each WAN device</h3><ul>
+<li>Put each Starlink router in <strong>bypass mode</strong> (or use the Starlink Ethernet adapter) so OMR gets the address directly; otherwise give each Starlink router a different LAN subnet.</li>
+<li>For a modem/router: disable its DHCP or give it a unique subnet (e.g. <code>192.168.11.1</code>) and <strong>disable IPv6</strong> on it so traffic can't leak past OMR. USB dongles appear as a ModemManager / QMI interface.</li>
+<li>If you use a VLAN switch: create VLANs 11–16 (one per WAN) as untagged access ports to the dishes, all tagged on the trunk port to the mini PC.</li></ul>
+<h3>2.3 Run the wizard</h3><ol>
+<li>Go to <strong>System → OpenMPTCProuter → Wizard</strong>.</li>
+<li><strong>Server IP:</strong> your far-end public address, e.g. <code>203.0.113.10</code>. <strong>Server key:</strong> the key printed at the end of the server script (e.g. <code>EXAMPLE-KEY-0000-REPLACE-ME</code>). Changing the key makes the wizard fetch settings from the server.</li>
+<li>Add one interface per WAN: <code>wan1</code>…<code>wan5</code> = Starlink (DHCP, on the right port or VLAN device such as <code>eth0.11</code>), <code>wan6</code> = cellular (DHCP or ModemManager). For static modems set IP/gateway/netmask, e.g. IP <code>192.168.11.2</code>, gateway <code>192.168.11.1</code>, <code>255.255.255.0</code>.</li>
+<li>On every WAN set <strong>Multipath TCP = <code>enabled</code></strong>. Optional: set the cellular link to <code>backup</code> if it has a data cap — it is then only used when all dishes fail.</li>
+<li>Leave the default VPN (<strong>MQVPN</strong> in 0.64) and default proxy unless you have a reason to change. Save &amp; apply.</li>
+<li>Open <strong>Status</strong>: every WAN should show green with its public IP, and the server should show as reachable with an API answer.</li></ol>
+<div class="note">In 0.64 you can also set per-interface <strong>weights</strong> (Network → Interfaces, or the MPTCP page) to favour the stronger dishes. Leave defaults first, tune later.</div></section>
+
+<section class="card" id="s3"><h2><span class="num">3</span>Far-end server setup (your own box, not a VPS)</h2>
+<h3>3.1 Install the official OMR server script — bare metal preferred</h3><ol>
+<li>Clean install of Debian 12 (x86_64), wired, with a static LAN address (e.g. <code>192.168.1.50</code>) and correct clock (NTP on).</li>
+<li>As root, run the official script (it installs the OMR MPTCP kernel, VPNs, proxies, firewall):</li></ol>
+<pre><code>wget -O - https://www.openmptcprouter.com/server/debian-x86_64.sh | sh</code></pre>
+<ol start="3"><li>At the end the script prints the server key and other credentials; they are also saved in <code>/root/openmptcprouter_config.txt</code>. Copy the key into the router wizard. Never paste it into public docs or chats.</li>
+<li><strong>SSH moves to port 65222</strong>. Reboot so the new kernel loads, then reconnect with <code>ssh -p 65222 root@192.168.1.50</code>.</li>
+<li>To update later, re-run the same command (0.64.2 needs server ≥ 0.1081).</li></ol>
+<div class="note"><strong>Docker / LXC:</strong> containers share the host kernel. They only work if the <em>host</em> kernel already has MPTCP enabled (upstream 5.6+, <code>net.mptcp.enabled=1</code>) and the container is allowed to manage networking; the script cannot install its kernel inside a container. Bare metal or a full KVM VM avoids all of this.</div>
+<h3>3.2 Port forwarding on the public-IP router</h3>
+<p>Forward from the far-end router's WAN (<code>203.0.113.10</code>) to the server's LAN IP (<code>192.168.1.50</code>). Simplest: forward <strong>TCP + UDP 65000–65535</strong> (the range the official docs suggest). Main ports per the wiki:</p>
+<table><tr><th>Port</th><th>Use</th></tr>
+<tr><td>65500 TCP</td><td>OMR JSON admin API (wizard / server key)</td></tr>
+<tr><td>65001 TCP+UDP</td><td>Glorytun</td></tr><tr><td>65101 / 65280 TCP+UDP</td><td>Shadowsocks / Shadowsocks-Rust</td></tr>
+<tr><td>65301 TCP</td><td>OpenVPN</td></tr><tr><td>65311–65312 UDP</td><td>WireGuard</td></tr>
+<tr><td>65228–65231, 65248–65252 TCP</td><td>V2Ray / XRay (443 if VLESS-Reality)</td></tr>
+<tr><td>65400 TCP+UDP</td><td>iperf3</td></tr><tr><td>65222 TCP</td><td>SSH (optional; better reach it over the tunnel or VPN only)</td></tr></table>
+<p class="mut">MQVPN (the 0.64 default VPN) uses a configurable port in the OMR range, or 443 in "port 443 mode" — forward whatever you set. Disable SIP ALG / "smart" filtering on that router. Since the server takes over traffic for the public IP, any services the shop exposes get forwarded through OMR's port-forwarding page, which pushes rules to the server.</p></section>
+
+<section class="card" id="s4"><h2><span class="num">4</span>MPTCP kernel requirements</h2><ul>
+<li>Upstream Linux has MPTCP since <strong>5.6</strong>; OMR 0.64 uses modern 6.x kernels (6.12 / 6.18) on both sides. The server script installs a matching kernel — keep it as the default GRUB entry.</li>
+<li>Check MPTCP is on:</li></ul>
+<pre><code>uname -r
+sysctl net.mptcp.enabled          # must be 1
+sysctl -w net.mptcp.enabled=1     # enable if 0
+ip mptcp limits show              # subflows / add_addr_accepted
+ip mptcp endpoint show            # one endpoint per WAN (router side)</code></pre>
+<ul><li>OMR configures endpoints and limits for you. With 6 WANs the limits must allow ≥ 6 subflows, e.g. <code>ip mptcp limits set subflows 8 add_addr_accepted 8</code> — normally only needed when debugging by hand.</li>
+<li>On the router, the <strong>MPTCP → Diagnose</strong> tab explains fallback, blackhole and reset problems in plain English.</li></ul></section>
+
+<section class="card" id="s5"><h2><span class="num">5</span>Routing — what OMR does for you</h2><ul>
+<li>Each LAN TCP connection is carried by the proxy/VPN as one MPTCP connection with <strong>one subflow per WAN</strong>; OMR creates the per-WAN routing tables and source rules automatically.</li>
+<li>Return traffic (your downloads) is spread by the <strong>server side</strong> across those same subflows — the far end acts as the merge point and the internet only ever sees <code>203.0.113.10</code>.</li>
+<li>UDP and non-TCP traffic goes through the multipath VPN (MQVPN by default).</li>
+<li><strong>mwan3 / policy routing / load-balancer not needed</strong> — don't add them, they fight OMR's own routing. OMR-Tracker handles link health and failover.</li>
+<li>Use OMR-ByPass only for things that must skip the tunnel (e.g. a site that needs a Starlink IP).</li></ul></section>
+
+<section class="card" id="s6"><h2><span class="num">6</span>Testing</h2><ol>
+<li><strong>Baseline before bonding:</strong> run a speedtest on each dish and the modem alone, and on the far-end line (note its <em>upload</em>!).</li>
+<li><strong>Through the tunnel</strong> from the OMR shell (SSH to the router):
+<pre><code>omr-test-speed            # aggregated download (run ≥ 2 min, Ctrl+C)
+omr-test-speed eth1       # one WAN only
+omr-iperf                 # aggregated, server → router
+omr-iperf vps -R          # reverse direction
+# or plain iperf3 against the server's iperf port:
+iperf3 -c 203.0.113.10 -p 65400 -P 8 -t 30 -R</code></pre></li>
+<li><strong>Status page:</strong> watch per-link bandwidth on each WAN during the test — all six should carry traffic. The Metrics page shows health score per link.</li>
+<li><strong>Speedtest after:</strong> from a LAN PC; the shown IP must be <code>203.0.113.10</code> (your far-end public IP).</li>
+<li><strong>Pull-a-cable test:</strong> start a long download / video call, unplug one dish, then the modem. The session should continue; OMR-Tracker marks the link down within seconds. Plug back and confirm it rejoins.</li></ol></section>
+
+<section class="card" id="s7"><h2><span class="num">7</span>Failure points &amp; fixes</h2>
+<table><tr><th>Problem</th><th>Fix</th></tr>
+<tr><td>Starlink CGNAT</td><td>Fine — OMR only makes outbound connections to the server. Only the far end needs a public IP.</td></tr>
+<tr><td>Dish obstruction / outages</td><td>Check the Starlink app's obstruction map, remount higher; OMR fails over, but a flapping dish lowers throughput — set it to backup until fixed.</td></tr>
+<tr><td>Speed stuck at a low ceiling</td><td>Far-end line <strong>upload</strong> is the hard cap (see warning box). Also check the far-end router's CPU for NAT throughput.</td></tr>
+<tr><td>Some sites hang, small pings OK</td><td>MTU / MSS: lower WAN MTU (e.g. 1400–1450 on cellular) and let OMR manage the tunnel MTU; don't force a static MTU on the MQVPN device.</td></tr>
+<tr><td>"Can ping server, no API answer"</td><td>Port 65500 not forwarded, ISP blocks the high ports, or fail2ban on an older server — update server to ≥ 0.1081 and check forwarding. Test with <code>nc -vz 203.0.113.10 65500</code> from outside.</td></tr>
+<tr><td>ISP blocks ports / UDP</td><td>Switch the VPN to TCP-based (OpenVPN/Glorytun TCP) or MQVPN port 443 mode; ask the ISP to lift filtering.</td></tr>
+<tr><td>Traffic flows but no aggregation</td><td>Kernel lacking MPTCP: <code>sysctl net.mptcp.enabled</code> must be 1 on the server; reboot into the OMR kernel; containers need host support.</td></tr>
+<tr><td>Tunnel/keys rejected, TLS errors</td><td>Clock/time wrong — enable NTP on both ends (System → System → time sync on OMR; <code>timedatectl set-ntp true</code> on Debian).</td></tr>
+<tr><td>Names don't resolve / DNS hijack warnings</td><td>Let OMR handle DNS (it sends queries through the tunnel); set LAN clients to use the router; check the DNS hijacking alert.</td></tr>
+<tr><td>Far-end IP changes</td><td>You need a <em>static</em> public IP, or use a DNS name in the wizard and a DDNS client at the far end.</td></tr></table></section>
+
+<section class="card" id="src"><h2>Official sources used</h2><ul>
+<li><a href="https://www.openmptcprouter.com/">openmptcprouter.com</a> — downloads &amp; v0.64 / v0.64.2 release notes</li>
+<li><a href="https://github.com/Ysurac/openmptcprouter/wiki/Router-install">Wiki: Router install</a></li>
+<li><a href="https://github.com/Ysurac/openmptcprouter/wiki/OpenMPTCProuter-configuration">Wiki: OpenMPTCProuter configuration</a></li>
+<li><a href="https://github.com/Ysurac/openmptcprouter/wiki/Install-or-update-the-VPS">Wiki: Install or update the VPS</a> (script, ports, key file)</li>
+<li><a href="https://github.com/Ysurac/openmptcprouter/wiki/Test-speed">Wiki: Test speed</a></li>
+<li><a href="https://www.openmptcprouter.com/server/debian-x86_64.sh">Server script debian-x86_64.sh</a> (supported OS list, SSH port 65222)</li></ul>
+<p class="mut">All IPs and keys on this page are placeholders (203.0.113.0/24 is reserved for documentation).</p></section>
+</main>
+<footer><div class="c">© Neuereatec · <a href="index.html">Home</a> · <a href="bonding.html">Animated bonding diagram</a></div></footer>
+</body></html>
