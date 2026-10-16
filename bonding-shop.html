@@ -39,7 +39,7 @@ main{max-width:1100px;margin:auto;padding:40px 20px;text-align:center}h1{font-si
 <li>Without that far-end endpoint, the router can only load-balance separate connections (per session), just like the PC option above.</li>
 <li><b>Combined speed</b> (same typical, not-measured figures as above): about <span class="cmbT"></span> in theory, realistically <span class="cmbR"></span>. With the endpoint, a single download can use that combined speed too (minus tunnel overhead, and the VPS/cloud link must be fast enough).</li></ul>
 <p style="color:#9aa6b2;font-size:.9rem;margin:10px 0 0">Sources: <a href="https://www.openmptcprouter.com/">OpenMPTCProuter (router + server part, MPTCP aggregation)</a> · <a href="https://www.peplink.com/technology/speedfusion-bonding-technology/">Peplink SpeedFusion bonding</a> · <a href="https://www.peplink.com/products/fusionhub/">Peplink FusionHub</a> · <a href="https://www.peplink.com/speedfusion-cloud/">SpeedFusion Cloud</a></p></div>
-</main><script>
+<p class="cap" style="text-align:center"><a href="netlink.html" style="color:#f0c674">Netlink: split one download across all lines (no VPS) →</a></p></main><script>
 /* EDIT HERE: replace with real results. down/up = [low, high] Mbps. Set measured:true and date:"YYYY-MM-DD" once tested. */
 var LINES=[
  {name:"Starlink 1",down:[80,200],up:[15,35],measured:false,date:""},
